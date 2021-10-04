@@ -1,0 +1,10 @@
+logging {{ topology.baseline.logging_ip }} vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }}
+!
+domain vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }} name cmllab.test
+domain vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }} name-server {{ topology.baseline.dns_ip }}
+!
+ntp
+ server vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }} {{ topology.baseline.ntp_ip }} prefer source {{ topology.baseline.mgmt_intf_xr | default("MgmtEth0/RP0/CPU0/0", true) }}
+!
+!
+lldp

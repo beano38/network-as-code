@@ -1,0 +1,7 @@
+---
+collections:
+  - name: cisco.nso
+  - name: netbox.netbox
+
+roles:
+  - name: ansible-network.network-engine

@@ -1,0 +1,188 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  collections:
+  - netbox.netbox
+  - cisco.nso
+
+  pre_tasks:
+    - name: Load NSO Variable Files
+      include_vars:
+        file: host_vars/nso-api.yml
+        name: nso
+    - name: Load Netbox Variable Files
+      include_vars:
+        file: host_vars/netbox-api.yml
+        name: netbox
+    - name: Load Topology Variable Files
+      include_vars:
+        file: group_vars/topology_evpn.yml
+        name: topology
+
+  # tasks:
+  #   - name: Deploy Baseline Services Config
+  #     nso_config:
+  #       url: "{{ nso.url }}"
+  #       username: "{{ nso.username }}"
+  #       password: "{{ nso.password }}"
+  #       data:
+  #         baseline:baseline:
+  #         - name: "{{ topology.name }}"
+  #           device: "{{ topology.devices_list }}"
+  #           mgmt_gw: "{{ topology.baseline.mgmt_gateway }}"
+  #           dns_ip: "{{ topology.baseline.dns_ip }}"
+  #           domain_name: "{{ topology.baseline.domain_name }}"
+  #           ntp_ip: "{{ topology.baseline.ntp_ip }}"
+  #           vrf_name: "{{ topology.baseline.vrf_name }}"
+  #           logging_ip: "{{ topology.baseline.logging_ip }}"
+
+  #   - name: Create Loopbacks
+  #     include_role:
+  #       name: loopback
+  #     vars:
+  #       netbox_url: "{{ netbox.url }}"
+  #       netbox_token: "{{ netbox.token }}"
+  #       nso_url: "{{ nso.url }}"
+  #       nso_username: "{{ nso.username }}"
+  #       nso_password: "{{ nso.password }}"
+  #       site_name: "{{ topology.name }}"
+  #       loopback: "{{ loopback_item }}"
+  #       parent_ipv4_prefix: "{{ topology.prefixes.ipv4.access_loopback if loopback_item.prefix_role == 'access-loopbacks' else topology.prefixes.ipv4.core_loopback }}"
+  #       parent_ipv6_prefix: "{{ topology.prefixes.ipv6.access_loopback if loopback_item.prefix_role == 'access-loopbacks' else topology.prefixes.ipv6.core_loopback }}"
+  #     loop: "{{ topology.loopbacks }}"
+  #     loop_control:
+  #       loop_var: loopback_item
+
+  #   - name: Create Interconnect
+  #     include_role:
+  #       name: interconnect
+  #     vars:
+  #       netbox_url: "{{ netbox.url }}"
+  #       netbox_token: "{{ netbox.token }}"
+  #       nso_url: "{{ nso.url }}"
+  #       nso_username: "{{ nso.username }}"
+  #       nso_password: "{{ nso.password }}"
+  #       site_name: "{{ topology.name }}"
+  #       interconnect: "{{ ixc }}"
+  #       parent_ipv4_prefix: "{{ topology.prefixes.ipv4.access_interconnect if 'ixc.prefix_role' == 'access-interconnets' else topology.prefixes.ipv4.core_interconnect }}"
+  #       parent_ipv6_prefix: "{{ topology.prefixes.ipv6.access_interconnect if 'ixc.prefix_role' == 'access-interconnets' else topology.prefixes.ipv6.core_interconnect }}"
+  #     loop: "{{ topology.interconnects }}"
+  #     loop_control:
+  #       loop_var: ixc
+
+  #   - name: Deploy IS-IS IGP
+  #     nso_config:
+  #       url: "{{ nso.url }}"
+  #       username: "{{ nso.username }}"
+  #       password: "{{ nso.password }}"
+  #       data:
+  #         isis:isis:
+  #         - name: "{{ item[0].id }}"
+  #           device: "{{ item[0].name }}"
+  #           interface:
+  #           - interface_type: "{{ item[1].type }}"
+  #             interface_number: "{{ item[1].number }}"
+  #             passive: "{{ item[1].passive | default('false') }}"
+  #             bfd:
+  #               enabled: "{{ item[1].bfd | default('true') }}"
+  #           isis:
+  #             process_name: CORE
+  #             net_id: "{{ item[0].isis_net }}"
+  #     with_subelements:
+  #       - "{{ topology.devices }}"
+  #       - interfaces
+
+  #   - name: Deploy MPLS LDP
+  #     nso_config:
+  #       url: "{{ nso.url }}"
+  #       username: "{{ nso.username }}"
+  #       password: "{{ nso.password }}"
+  #       data:
+  #         mpls:mpls:
+  #         - name: "{{ item[0].id }}"
+  #           device: "{{ item[0].name }}"
+  #           interface:
+  #           - interface_type: "{{ item[1].type }}"
+  #             interface_number: "{{ item[1].number }}"
+  #           isis:
+  #             process_name: CORE
+  #           mpls:
+  #             router_id: "{{ item[0].mpls_router_id }}"
+  #     when: item.1.mpls_ldp == true
+  #     with_subelements:
+  #       - "{{ topology.devices }}"
+  #       - interfaces
+
+  #   - name: Deploy Segment Routing Control Plane
+  #     nso_config:
+  #       url: "{{ nso.url }}"
+  #       username: "{{ nso.username }}"
+  #       password: "{{ nso.password }}"
+  #       data:
+  #         segment_routing:segment_routing:
+  #         - name: "{{ item[0].id }}"
+  #           device: "{{ item[0].name }}"
+  #           interface:
+  #           - interface_type: "{{ item[1].type }}"
+  #             interface_number: "{{ item[1].number }}"
+  #             sid: "{{ item[0].sr_prefix_sid }}"
+  #             ip_addr: "{{ item[0].mpls_router_id }}"
+  #           isis:
+  #             process_name: CORE
+  #     when: 
+  #       - item.1.type == "Loopback"
+  #       - topology.segment_routing.enable == True
+  #     with_subelements:
+  #     - "{{ topology.devices }}"
+  #     - interfaces
+
+  #   - name: Enable TI-LFA in SR Control Plane
+  #     nso_config:
+  #       url: "{{ nso.url }}"
+  #       username: "{{ nso.username }}"
+  #       password: "{{ nso.password }}"
+  #       data:
+  #         segment_routing:segment_routing:
+  #         - name: "{{ item[0].id }}"
+  #           device: "{{ item[0].name }}"
+  #           interface:
+  #           - interface_type: "{{ item[1].type }}"
+  #             interface_number: "{{ item[1].number }}"
+  #             ti_lfa: "{{ topology.segment_routing.ti_lfa }}"
+  #     when: 
+  #       - item.1.type != "Loopback"
+  #       - topology.segment_routing.enable == True
+  #     with_subelements:
+  #     - "{{ topology.devices }}"
+  #     - interfaces
+
+    - name: Prefer Segment Routing Control Plane
+      nso_config:
+        url: "{{ nso.url }}"
+        username: "{{ nso.username }}"
+        password: "{{ nso.password }}"
+        data:
+          segment_routing:segment_routing:
+          - name: "{{ item.id }}"
+            isis:
+              sr_prefer: True
+      when: 
+        - topology.segment_routing.enable == True
+        - topology.segment_routing.prefer == True
+      with_items:
+      - "{{ topology.devices }}"
+
+    - name: Prefer MPLS LDP Control Plane
+      nso_config:
+        url: "{{ nso.url }}"
+        username: "{{ nso.username }}"
+        password: "{{ nso.password }}"
+        data:
+          segment_routing:segment_routing:
+          - name: "{{ item.id }}"
+            isis:
+              sr_prefer: False
+      when: topology.segment_routing.prefer == False
+      with_items:
+      - "{{ topology.devices }}"

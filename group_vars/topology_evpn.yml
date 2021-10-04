@@ -1,0 +1,167 @@
+name: evpn
+
+devices_list:
+  - EVPN-P0-RTR
+  - EVPN-P1-RTR
+  - EVPN-PE0-RTR
+  - EVPN-PE1-RTR
+
+devices:
+  - name: EVPN-P0-RTR
+    id: EVPN-P0
+    isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0131.00
+    mgmt_ip: 172.16.100.131
+    mpls_router_id: 172.16.16.1
+    sr_prefix_sid: 1
+    interfaces:
+      - number: 0
+        type: Loopback
+        passive: True
+        bfd: False
+        mpls_ldp: False
+      - number: 0/0/0/0
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/1
+        type: GigabitEthernet
+        mpls_ldp: True
+  - name: EVPN-P1-RTR
+    id: EVPN-P1
+    isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0132.00
+    mgmt_ip: 172.16.100.132
+    mpls_router_id: 172.16.16.2
+    sr_prefix_sid: 2
+    interfaces:
+      - number: 0
+        type: Loopback
+        passive: True
+        bfd: False
+        mpls_ldp: False
+      - number: 0/0/0/0
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/1
+        type: GigabitEthernet
+        mpls_ldp: True
+  - name: EVPN-PE0-RTR
+    id: EVPN-PE0
+    isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0133.00
+    mgmt_ip: 172.16.100.133
+    mpls_router_id: 172.16.16.3
+    sr_prefix_sid: 3
+    interfaces:
+      - number: 0
+        type: Loopback
+        passive: True
+        bfd: False
+        mpls_ldp: False
+      - number: 0/0/0/0
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/1
+        type: GigabitEthernet
+        mpls_ldp: True
+  - name: EVPN-PE1-RTR
+    id: EVPN-PE1
+    isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0134.00
+    mgmt_ip: 172.16.100.134
+    mpls_router_id: 172.16.16.4
+    sr_prefix_sid: 4
+    interfaces:
+      - number: 0
+        type: Loopback
+        passive: True
+        bfd: False
+        mpls_ldp: False
+      - number: 0/0/0/0
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/1
+        type: GigabitEthernet
+        mpls_ldp: True
+
+baseline:
+  mgmt_intf_xe: GigabitEthernet1
+  mgmt_gateway: 172.16.100.1
+  radius_ip: 172.16.30.10
+  logging_ip: 172.16.30.10
+  ntp_ip: 172.16.30.10
+  dns_ip: 172.16.30.10
+  vrf_name: Mgmt-intf
+  domain_name: cmllab.test
+
+segment_routing:
+  enable: True
+  prefer: True
+  ti_lfa: True
+
+multicast-routing:
+  enable: True
+
+prefixes:
+  ipv4:
+    core: 172.16.16.0/22
+    core_loopback: 172.16.16.0/26
+    core_interconnect: 172.16.16.128/25
+    access: 172.16.20.0/22
+    access_loopback: 172.16.20.0/26
+    access_interconnect: 172.16.20.128/25
+  ipv6:
+    core: fd00:0:1::/52
+    core_loopback: fd00:0:1::/64
+    core_interconnect: fd00:0:1:1::/64
+    access: fd00:0:1:1000::/52
+    access_loopback: fd00:0:1:1000::/64
+    access_interconnect: fd00:0:1:1001::/64
+
+loopbacks:
+  - name: EVPN-P0-L0
+    prefix_role: core-loopback
+    device: EVPN-P0-RTR
+    interface: "0"
+  - name: EVPN-P1-L0
+    prefix_role: core-loopback
+    device: EVPN-P1-RTR
+    interface: "0"
+  - name: EVPN-PE0-L0
+    prefix_role: core-loopback
+    device: EVPN-PE0-RTR
+    interface: "0"
+  - name: EVPN-PE1-L0
+    prefix_role: access-loopback
+    device: EVPN-PE1-RTR
+    interface: "0"
+
+interconnects:
+  - name: SP0-LE0
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: EVPN-P0-RTR
+      intf_number: 0/0/0/0
+    - device: EVPN-PE0-RTR
+      intf_number: 0/0/0/0
+  - name: SP0-LE1
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: EVPN-P0-RTR
+      intf_number: 0/0/0/1
+    - device: EVPN-PE1-RTR
+      intf_number: 0/0/0/0
+  - name: SP1-LE0
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: EVPN-P1-RTR
+      intf_number: 0/0/0/0
+    - device: EVPN-PE0-RTR
+      intf_number: 0/0/0/1
+  - name: SP1-LE1
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: EVPN-P1-RTR
+      intf_number: 0/0/0/1
+    - device: EVPN-PE1-RTR
+      intf_number: 0/0/0/1

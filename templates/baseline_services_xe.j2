@@ -1,0 +1,9 @@
+logging host {{ topology.baseline.logging_ip }} vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }}
+!
+ip name-server vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }} {{ topology.baseline.dns_ip }}
+ip domain name vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }} cmllab.test
+!
+ntp peer vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }} {{ topology.baseline.ntp_ip }} prefer
+!
+lldp run
+

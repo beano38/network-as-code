@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  collections:
+  - netbox.netbox
+
+  pre_tasks:
+    - name: Load NSO Variable Files
+      include_vars:
+        file: host_vars/nso-api.yml
+        name: nso
+    - name: Load Netbox Variable Files
+      include_vars:
+        file: host_vars/netbox-api.yml
+        name: netbox
+    - name: Load Cisco Password Variable Files
+      include_vars:
+        file: host_vars/cisco-passwords.yml
+        name: creds
+    - name: Load Topology Variable Files
+      include_vars:
+        file: group_vars/topology_evpn.yml
+        name: topology
+
+  tasks:
+    - include: tasks/cml_render.yml
+      

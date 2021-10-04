@@ -1,0 +1,43 @@
+!! IOS XR
+
+username {{ creds.login_user | default("cisco", true) }}
+ group root-lr
+ group cisco-support
+ password {{ creds.login_pass | default("cisco", true) }}
+!
+hostname {{ hostname|default("staging", true) }}
+!
+vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }}
+ address-family ipv4 unicast
+!
+interface {{ topology.baseline.mgmt_intf_xr | default("MgmtEth0/RP0/CPU0/0", true) }}
+ no ipv4 address
+ vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }}
+ ipv4 address dhcp-client-options
+ option 61 ascii {{ hostname|default("staging", true) }}
+ ipv4 address dhcp
+ no shutdown
+!
+router static
+ vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }}
+  address-family ipv4 unicast
+   0.0.0.0/0 {{ topology.baseline.mgmt_gateway | default("172.16.100.1", true) }}
+!
+ssh server v2
+ssh server vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }}
+!
+radius-server host {{ topology.baseline.radius_ip }} auth-port {{ topology.baseline.radius_auth_port | default("1812", true) }} acct-port {{ topology.baseline.radius_acct_port | default("1813") }}
+ key {{ creds.radius_key }}
+!
+aaa group server radius RADGRP
+ server {{ topology.baseline.radius_ip }} auth-port {{ topology.baseline.radius_auth_port | default("1812", true) }} acct-port {{ topology.baseline.radius_acct_port | default("1813") }}
+ vrf {{ topology.baseline.mgmt_vrf | default("Mgmt-intf", true) }}
+ source-interface {{ topology.baseline.mgmt_intf_xr | default("MgmtEth0/RP0/CPU0/0", true) }}
+!
+aaa authentication login RADLOGIN group RADGRP local
+!
+line template VTY
+ login authentication RADLOGIN
+ exec-timeout 0 0
+!
+vty-pool default 0 99 line-template VTY

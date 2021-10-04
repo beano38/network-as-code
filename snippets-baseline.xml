@@ -1,0 +1,239 @@
+<config xmlns="http://tail-f.com/ns/config/1.0">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+
+
+
+
+
+
+
+        <radius-server xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <host>
+            <id>172.16.30.10</id>
+            <auth-port>1812</auth-port>
+            <acct-port>1813</acct-port>
+            <key>
+              <encryption>7</encryption>
+              <key>010707075A0815</key>
+            </key>
+          </host>
+        </radius-server>
+
+
+
+        <aaa xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <group>
+            <server>
+              <radius>
+                <name>RADGRP</name>
+                <vrf>Mgmt-intf</vrf>
+                <server>
+                  <direct>
+                    <name>172.16.30.10</name>
+                    <auth-port>1812</auth-port>
+                    <acct-port>1813</acct-port>
+                  </direct>
+                </server>
+                <source-interface>
+                  <MgmtEth>0/RP0/CPU0/0</MgmtEth>
+                </source-interface>
+              </radius>
+            </server>
+          </group>
+          <authentication>
+            <login>
+              <name>RADLOGIN</name>
+              <methods>group RADGRP local</methods>
+            </login>
+          </authentication>
+        </aaa>
+
+        <line xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <template>
+            <name>VTY</name>
+            <exec-timeout>
+              <minutes>0</minutes>
+              <seconds>0</seconds>
+            </exec-timeout>
+            <login>
+              <authentication>RADLOGIN</authentication>
+            </login>
+          </template>
+        </line>
+
+        <vty-pool xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <default>
+            <first-vty>0</first-vty>
+            <last-vty>99</last-vty>
+            <line-template>VTY</line-template>
+          </default>
+        </vty-pool>
+
+        
+
+
+      </config>
+    </device>
+  </devices>
+</config>
+
+
+
+
+
+
+
+
+<config xmlns="http://tail-f.com/ns/config/1.0">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+     
+      <config>
+
+
+
+
+        <enable xmlns="urn:ios">
+          <password>
+            <type>7</type>
+            <secret>070C285F4D06</secret>
+          </password>
+          <secret>
+            <type>9</type>
+            <secret>$9$PbOIQOCHmBLzD.$EdgDY5BqACRyg8vF0bG5c3/Ou3FknaFix/oI5nfCvPc</secret>
+          </secret>
+        </enable>
+
+        <aaa xmlns="urn:ios">
+          <new-model/>
+          <group>
+            <server>
+              <radius>
+                <name>RADGRP</name>
+                <server>
+                  <name>
+                    <name>FREERADIUS</name>
+                  </name>
+                </server>
+                <ip>
+                  <vrf>
+                    <forwarding>Mgmt-intf</forwarding>
+                  </vrf>
+                  <radius>
+                    <source-interface>
+                      <GigabitEthernet>1</GigabitEthernet>
+                    </source-interface>
+                  </radius>
+                </ip>
+              </radius>
+            </server>
+          </group>
+          <authentication>
+            <login>
+              <name>default</name>
+              <group>radius</group>
+            </login>
+            <login>
+              <name>CONSOLE</name>
+              <local/>
+            </login>
+          </authentication>
+          <authorization>
+            <exec>
+              <name>default</name>
+              <if-authenticated/>
+            </exec>
+          </authorization>
+          <session-id>common</session-id>
+        </aaa>
+        
+        <ip xmlns="urn:ios">
+
+
+          <radius>
+            <source-interface-vrf>
+              <source-interface>
+                <vrf>Mgmt-intf</vrf>
+                <name>GigabitEthernet1</name>
+              </source-interface>
+            </source-interface-vrf>
+          </radius>
+
+        </ip>
+
+        <username xmlns="urn:ios">
+          <name>cisco</name>
+          <privilege>15</privilege>
+          <secret>
+            <type>9</type>
+            <secret>$9$M94UF1dtFl7D8.$rbnXjs2HNKfhu7CAa8goEzUDmDrdk84Ow2Pl3gZjzfs</secret>
+          </secret>
+        </username>
+
+        <bfd-template xmlns="urn:ios">
+          <single-hop>
+            <name>INTERCONNECT</name>
+          </single-hop>
+        </bfd-template>
+
+        <line xmlns="urn:ios">
+          <console>
+            <first>0</first>
+            <local-authentication>
+              <login>
+                <authentication>CONSOLE</authentication>
+              </login>
+            </local-authentication>
+            <password>
+              <type>7</type>
+              <secret>030752180500</secret>
+            </password>
+            <stopbits>1</stopbits>
+          </console>
+          <vty>
+            <first>0</first>
+            <last>4</last>
+            <exec-timeout>
+              <minutes>0</minutes>
+            </exec-timeout>
+            <password>
+              <type>7</type>
+              <secret>030752180500</secret>
+            </password>
+            <transport>
+              <input>ssh</input>
+              <input>telnet</input>
+            </transport>
+          </vty>
+        </line>
+
+
+
+
+
+        <segment-routing xmlns="urn:ios">
+          <mpls/>
+        </segment-routing>
+
+        <radius xmlns="urn:ios">
+          <server>
+            <id>FREERADIUS</id>
+            <address>
+              <ipv4>
+                <host>172.16.30.10</host>
+                <auth-port>1812</auth-port>
+                <acct-port>1813</acct-port>
+              </ipv4>
+            </address>
+            <key>
+              <type>7</type>
+              <secret>044F0A050E225F</secret>
+            </key>
+          </server>
+        </radius>
+
+      </config>
+    </device>
+  </devices>
+</config>

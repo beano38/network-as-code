@@ -1,0 +1,18 @@
+router isis {{ process_id | default("CORE", true) }}
+ net {{ isis_net }}
+ is-type level-2-only
+ metric-style wide
+ max-lsp-lifetime 65535
+ spf-interval 30 50 200
+ log-adjacency-changes
+ segment-routing mpls
+ segment-routing prefix-sid-map advertise-local
+ fast-reroute per-prefix level-2 all
+ fast-reroute ti-lfa level-2
+ passive-interface Loopback0
+ distance 15 ip
+ mpls ldp sync
+ mpls ldp autoconfig
+ mpls traffic-eng router-id Loopback0
+ mpls traffic-eng level-2
+!

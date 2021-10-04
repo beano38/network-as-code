@@ -1,0 +1,296 @@
+name: cst
+
+devices_list:
+  - P01-XR9KV
+  - P02-XR9KV
+  - PE01-XR9KV
+  - PE02-XR9KV
+  - RR01-XR9KV
+  - PA01-CSR1KV
+
+devices:
+  - name: P01-XR9KV
+    id: P01
+    isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0101.00
+    mgmt_ip: 172.16.100.101
+    mpls_router_id: 172.16.0.1
+    sr_prefix_sid: 1
+    interfaces:
+      - number: 0
+        type: Loopback
+        passive: True
+        bfd: False
+        mpls_ldp: False
+      - number: 0/0/0/0
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/1
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/2
+        type: GigabitEthernet
+        mpls_ldp: True
+  - name: P02-XR9KV
+    id: P02
+    isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0102.00
+    mgmt_ip: 172.16.100.102
+    mpls_router_id: 172.16.0.2
+    sr_prefix_sid: 2
+    interfaces:
+      - number: 0
+        type: Loopback
+        passive: True
+        bfd: False
+        mpls_ldp: False
+      - number: 0/0/0/0
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/1
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/2
+        type: GigabitEthernet
+        mpls_ldp: True
+  - name: PE01-XR9KV
+    id: PE01
+    isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0121.00
+    mgmt_ip: 172.16.100.121
+    mpls_router_id: 172.16.0.4
+    sr_prefix_sid: 4
+    interfaces:
+      - number: 0
+        type: Loopback
+        passive: True
+        bfd: False
+        mpls_ldp: False
+      - number: 0/0/0/0
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/1
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/2
+        type: GigabitEthernet
+        mpls_ldp: True
+  - name: PE02-XR9KV
+    id: PE02
+    isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0122.00
+    mgmt_ip: 172.16.100.122
+    mpls_router_id: 172.16.0.5
+    sr_prefix_sid: 5
+    interfaces:
+      - number: 0
+        type: Loopback
+        passive: True
+        bfd: False
+        mpls_ldp: False
+      - number: 0/0/0/0
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/1
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 0/0/0/2
+        type: GigabitEthernet
+        mpls_ldp: True
+  # - name: RR01-XR9KV
+  #   id: RR01
+  #   isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0151.00
+  #   mgmt_ip: 172.16.100.151
+  #   mpls_router_id: 172.16.0.3
+  #   sr_prefix_sid: 3
+  #   interfaces:
+  #     - number: 0
+  #       type: Loopback
+  #       passive: True
+  #       bfd: False
+  #       mpls_ldp: False
+  #     - number: 0/0/0/0
+  #       type: GigabitEthernet
+  #       mpls_ldp: True
+  #     - number: 0/0/0/1
+  #       type: GigabitEthernet
+  #       mpls_ldp: True
+  - name: PA01-CSR1KV
+    id: PA01
+    isis_net: 49.0023.0000.0000.0002.0001.1720.1610.0201.00
+    mgmt_ip: 172.16.100.201
+    mpls_router_id: 172.16.0.6
+    sr_prefix_sid: 6
+    interfaces:
+      - number: 0
+        type: Loopback
+        passive: true
+        bfd: false
+        mpls_ldp: false
+      - number: 2
+        type: GigabitEthernet
+        mpls_ldp: True
+      - number: 3 
+        type: GigabitEthernet
+        mpls_ldp: True
+
+  # - name: SW01-Unmanaged
+  #   id: SW01
+  # - name: EC01-Bridge1
+  #   id: EC01
+
+baseline:
+  mgmt_intf_xe: GigabitEthernet1
+  mgmt_gateway: 172.16.100.1
+  radius_ip: 172.16.30.10
+  logging_ip: 172.16.30.10
+  ntp_ip: 172.16.30.10
+  dns_ip: 172.16.30.10
+  vrf_name: Mgmt-intf
+  domain_name: cmllab.test
+
+# mpls-ldp:
+#   enable: True
+
+segment_routing:
+  enable: True
+  prefer: True
+  ti_lfa: True
+
+multicast-routing:
+  enable: True
+
+prefixes:
+  ipv4:
+    core: 172.16.0.0/22
+    core_loopback: 172.16.0.0/26
+    core_interconnect: 172.16.0.128/25
+    access: 172.16.4.0/22
+    access_loopback: 172.16.4.0/26
+    access_interconnect: 172.16.4.128/25
+  ipv6:
+    core: fd00::/52
+    core_loopback: fd00::/64
+    core_interconnect: fd00:0:0:1::/64
+    access: fd00:0:0:1000::/52
+    access_loopback: fd00:0:0:1000::/64
+    access_interconnect: fd00:0:0:1001::/64
+    
+# igp:
+#   protocol: isis
+
+# bgp:
+#   asn: 65001
+#   address_families:
+#     - ipv4 unicast
+#     - ipv6 unicast
+#     - vpnv4 unicast
+#     - vpnv6 unicast
+#     - l2vpn evpn
+#   neighbor_groups:
+#     - name: IPV4-AF-RR
+#       address_families:
+#         - ipv4 unicast
+#         - vpnv4 unicast
+#     - name: IPV6-AF-RR
+#       address_families:
+#         - ipv6 unicast
+#         - vpnv6 unicast
+#     - name: ALL-AF-PEER
+#       address_families:
+#       - ipv4 unicast
+#       - ipv6 unicast
+#       - vpnv4 unicast
+#       - vpnv6 unicast
+#       - l2vpn evpn
+#     - name: L2VPN-RR
+#       address_families:
+#         - l2vpn evpn
+
+loopbacks:
+  - name: P01-L0
+    prefix_role: core-loopback
+    device: P01-XR9KV
+    interface: "0"
+  - name: P02-L0
+    prefix_role: core-loopback
+    device: P02-XR9KV
+    interface: "0"
+  - name: RR01-L0
+    prefix_role: core-loopback
+    device: RR01-XR9KV
+    interface: "0"
+  - name: PE01-L0
+    prefix_role: core-loopback
+    device: PE01-XR9KV
+    interface: "0"
+  - name: PE02-L0
+    prefix_role: access-loopback
+    device: PE02-XR9KV
+    interface: "0"
+  - name: PA01-L0
+    prefix_role: access-loopback
+    device: PA01-CSR1KV
+    interface: "0"
+
+interconnects:
+  - name: P01-PE01
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: P01-XR9KV
+      intf_number: 0/0/0/0
+    - device: PE01-XR9KV
+      intf_number: 0/0/0/0
+  - name: P01-PE02
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: P01-XR9KV
+      intf_number: 0/0/0/1
+    - device: PE02-XR9KV
+      intf_number: 0/0/0/0
+  - name: P01-RR01
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: P01-XR9KV
+      intf_number: 0/0/0/2
+    - device: RR01-XR9KV
+      intf_number: 0/0/0/0
+  - name: P02-PE01
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: P02-XR9KV
+      intf_number: 0/0/0/0
+    - device: PE01-XR9KV
+      intf_number: 0/0/0/1
+  - name: P02-PE02
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: P02-XR9KV
+      intf_number: 0/0/0/1
+    - device: PE02-XR9KV
+      intf_number: 0/0/0/1
+  - name: P02-RR01
+    prefix_role: core-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: P02-XR9KV
+      intf_number: 0/0/0/2
+    - device: RR01-XR9KV
+      intf_number: 0/0/0/1
+  - name: PE01-PA01
+    prefix_role: access-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: PE01-XR9KV
+      intf_number: 0/0/0/2
+    - device: PA01-CSR1KV
+      intf_number: 2
+  - name: PE02-PA01
+    prefix_role: access-interconnects
+    type: 1000BASE-T (1GE)
+    device_interfaces:
+    - device: PE02-XR9KV
+      intf_number: 0/0/0/2
+    - device: PA01-CSR1KV
+      intf_number: 3
