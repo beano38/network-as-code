@@ -100,19 +100,19 @@ multicast-routing:
 
 prefixes:
   ipv4:
-    core: 172.16.16.0/22
-    core_loopback: 172.16.16.0/26
-    core_interconnect: 172.16.16.128/25
-    access: 172.16.20.0/22
-    access_loopback: 172.16.20.0/26
-    access_interconnect: 172.16.20.128/25
+    core: 172.16.0.0/22
+    core_loopback: 172.16.0.0/26
+    core_interconnect: 172.16.0.128/25
+    access: 172.16.4.0/22
+    access_loopback: 172.16.4.0/26
+    access_interconnect: 172.16.4.128/25
   ipv6:
-    core: fd00:0:1::/52
-    core_loopback: fd00:0:1::/64
-    core_interconnect: fd00:0:1:1::/64
-    access: fd00:0:1:1000::/52
-    access_loopback: fd00:0:1:1000::/64
-    access_interconnect: fd00:0:1:1001::/64
+    core: fd00::/52
+    core_loopback: fd00::/64
+    core_interconnect: fd00:0:0:1::/64
+    access: fd00:0:0:1000::/52
+    access_loopback: fd00:0:0:1000::/64
+    access_interconnect: fd00:0:0:1001::/64
 
 loopbacks:
   - name: EVPN-P0-L0
