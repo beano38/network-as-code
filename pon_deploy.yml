@@ -25,7 +25,6 @@
     template:
       src: templates/deploy_olt.j2
       dest: output/deploy_olt.yml
-    register: output
 
   - include_tasks: output/deploy_olt.yml
 
