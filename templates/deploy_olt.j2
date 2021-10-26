@@ -1,0 +1,110 @@
+- name: "########### STEP1: All Active Anycast EVPN IRB"
+  nso_config:
+    url: "{{ nso.url }}"
+    username: "{{ nso.username }}"
+    password: "{{ nso.password }}"
+    data:
+      evpn_irb:evpn_irb:
+{% for site in pon.sites %}
+      - name: {{ site.plug }}
+        device:
+{% for olt in site.olts %}
+{% for interface in olt.interfaces %}
+        - {{ interface.device }}
+{% endfor %}
+{% endfor %}
+        vrfs:
+          vrf:
+{% for vrf in site.networks %}
+          - vrf_name: {{ site.plug }}_{{ vrf.name }}
+            description: {{ vrf.name }}
+            my_bgp_as: {{ pon.bgp_as }}
+            my_vrf_community: {{ vrf.community }}
+            v4_imports:
+{% for bgp_in in vrf.imports %}
+{% for provider in pon.providers %}
+{% if provider.name == bgp_in %}
+            - vrf_community: {{ provider.community }}
+              bgp_as: {{ provider.bgp_as }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+        bgp:
+          bgp_as: {{ pon.bgp_as }}
+          vrf:
+{% for vrf in site.networks %}
+          - vrf_name: {{ site.plug }}_{{ vrf.name }}
+{% endfor %}
+        interfaces:
+          interface:
+{% for vrf in site.networks %}
+          - interface_type: BVI
+            interface_number: {{ vrf.community }}
+            description: {{ site.plug }}_{{ vrf.name }}
+            ipv4_address: {{ vrf.ipv4_address }}
+            ipv4_mask: {{ vrf.ipv4_address }}
+            vrf: {{ site.plug }}_{{ vrf.name }}
+            mac_address: badb.a{{ vrf.community }}.00{{ site.id }}
+{% endfor %}
+        evpn:
+          evi:
+{% for vrf in site.networks %}
+          - evi_id: {{ vrf.community }}
+{% endfor %}
+        l2vpn:
+          group_name: {{ site.plug }}_OLTS
+          bridge_domain:
+{% for vrf in site.networks %}
+          - bd_name: {{ vrf.name }}
+            interface:
+            - interface_type: BVI
+              interface_number: {{ vrf.community }}
+            evi_id: {{ vrf.community }}
+{% endfor %}
+{% endfor %}
+
+    {# OLT Deployment #}
+
+{% for site in pon.sites %}
+      olt_deploy:olt_deploy:
+{% for olt in site.olts %}
+      - name: {{ site.plug }}
+        pe:
+{% for interface in olt.interfaces %}
+        - device: {{ interface.device }}
+          interfaces:
+            interface:
+            - interface_type: Bundle-Ether
+              interface_number: {{ olt.id }}
+              description: {{ site.plug }}_{{ olt.name }}
+              lacp_mode: active
+              lacp_mac_address: badb.ad{{ olt.id }}.00{{ site.id }}
+{% for vrf in site.networks %}
+            - interface_type: Bundle-Ether
+              interface_number: {{ olt.id }}.{{ vrf.community }}
+              description: {{ vrf.name }}
+              outer_vlan: {{ vrf.community }}
+{% endfor %}
+            - interface_type: {{ interface.interface_type }}
+              interface_number: {{ interface.interface_number }}
+              description: {{ site.plug }}_{{ olt.name }}
+              bundle_id: {{ olt.id }}
+              lacp_mode: active
+{% endfor %}
+          evpn:
+            interface:
+            - interface_type: Bundle-Ether
+              interface_number: {{ olt.id }}
+              esi_identifier: {{ site.id }}.6e.65.62.72.65.64.6c.65.{{ olt.id }}
+          l2vpn:
+            group_name: {{ site.plug }}_OLTS
+            bridge_domain:
+{% for vrf in site.networks %}
+            - bd_name: {{ vrf.name }}
+              interface:
+              - interface_type: Bundle-Ether
+                interface_number: {{ olt.id }}.{{ vrf.community }}
+{% endfor %}
+{% endfor %}
+{% endfor %}

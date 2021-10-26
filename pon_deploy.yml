@@ -20,7 +20,12 @@
         name: pon
 
   tasks:
-    - include_tasks: "tasks/01_evpn_irb.yml"
-      loop: "{{ pon.sites }}"
-      loop_control:
-        loop_var: site
+
+  - name: Render NSO Play
+    template:
+      src: templates/deploy_olt.j2
+      dest: output/deploy_olt.yml
+    register: output
+
+  - include_tasks: output/deploy_olt.yml
+

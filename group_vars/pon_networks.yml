@@ -15,6 +15,8 @@ providers:
 sites:
   - name: Ephrata
     plug: EPH
+    id: 10
+    state: future
     networks:
       - name: INTERNET
         community: 201
@@ -34,9 +36,6 @@ sites:
           - CDN_VIDEO
         ipv4_address: 172.16.203.1
         ipv4_mask: 255.255.255.0
-    devices:
-      - EVPN-PE0-RTR
-      - EVPN-PE1-RTR
     dhcp:
       - name: CNR
         helper_address: 198.18.201.16
@@ -45,7 +44,6 @@ sites:
     olts:
       - name: ROLT10
         id: 10
-        site: EPH
         interfaces:
           - device: EVPN-PE0-RTR
             interface_type: TenGigE
@@ -53,8 +51,76 @@ sites:
           - device: EVPN-PE1-RTR
             interface_type: TenGigE
             interface_number: 0/0/0/10
+          # - device: EVPN-PE2-RTR
+          #   interface_type: TenGigE
+          #   interface_number: 0/0/0/10
+      - name: ROLT11
+        id: 11
+        interfaces:
+          - device: EVPN-PE0-RTR
+            interface_type: TenGigE
+            interface_number: 0/0/0/11
+          - device: EVPN-PE1-RTR
+            interface_type: TenGigE
+            interface_number: 0/0/0/11
+
+      - name: ROLT12
+        id: 12
+        interfaces:
+          - device: EVPN-PE0-RTR
+            interface_type: TenGigE
+            interface_number: 0/0/0/12
+          - device: EVPN-PE1-RTR
+            interface_type: TenGigE
+            interface_number: 0/0/0/12
 
 
+  # - name: Stroudsburg
+  #   plug: STB
+  #   id: 11
+  #   networks:
+  #     - name: INTERNET
+  #       community: 101
+  #       imports:
+  #         - PROVIDER_INTERNET
+  #       ipv4_address: 172.16.101.1
+  #       ipv4_mask: 255.255.255.0
+  #     - name: VOICE
+  #       community: 102
+  #       imports:
+  #         - PROVIDER_VOICE
+  #       ipv4_address: 172.16.102.1
+  #       ipv4_mask: 255.255.255.0
+  #     - name: VIDEO
+  #       community: 103
+  #       imports:
+  #         - CDN_VIDEO
+  #       ipv4_address: 172.16.103.1
+  #       ipv4_mask: 255.255.255.0
+  #   dhcp:
+  #     - name: CNR
+  #       helper_address: 198.18.201.16
+  #       vrf: Mgmt-intf
+
+  #   olts:
+  #     - name: ROLT10
+  #       id: 10
+  #       interfaces:
+  #         - device: EVPN-PE2-RTR
+  #           interface_type: TenGigE
+  #           interface_number: 0/0/0/10
+  #         - device: EVPN-PE3-RTR
+  #           interface_type: TenGigE
+  #           interface_number: 0/0/0/10
+  #     - name: ROLT11
+  #       id: 11
+  #       interfaces:
+  #         - device: EVPN-PE2-RTR
+  #           interface_type: TenGigE
+  #           interface_number: 0/0/0/11
+  #         - device: EVPN-PE3-RTR
+  #           interface_type: TenGigE
+  #           interface_number: 0/0/0/11
 
 
 
