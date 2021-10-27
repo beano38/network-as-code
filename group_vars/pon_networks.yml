@@ -19,22 +19,22 @@ sites:
     state: future
     networks:
       - name: INTERNET
-        community: 201
+        community: 301
         imports:
           - PROVIDER_INTERNET
-        ipv4_address: 172.16.201.1
+        ipv4_address: 172.17.201.1
         ipv4_mask: 255.255.255.0
       - name: VOICE
-        community: 202
+        community: 302
         imports:
           - PROVIDER_VOICE
-        ipv4_address: 172.16.202.1
+        ipv4_address: 172.17.202.1
         ipv4_mask: 255.255.255.0
       - name: VIDEO
-        community: 203
+        community: 303
         imports:
           - CDN_VIDEO
-        ipv4_address: 172.16.203.1
+        ipv4_address: 172.17.203.1
         ipv4_mask: 255.255.255.0
     dhcp:
       - name: CNR
@@ -43,12 +43,14 @@ sites:
 
     olts:
       - name: ROLT10
-        id: 10
+        id: 30
         interfaces:
+          # - device: RBB.NCS540.11
           - device: EVPN-PE0-RTR
             interface_type: TenGigE
             interface_number: 0/0/0/10
-          - device: EVPN-PE1-RTR
+          # - device: RBB.NCS540.12
+          - device: EVPN-PE0-RTR
             interface_type: TenGigE
             interface_number: 0/0/0/10
           # - device: EVPN-PE2-RTR

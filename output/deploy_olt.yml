@@ -8,7 +8,7 @@
       - name: EPH
         device:
         - EVPN-PE0-RTR
-        - EVPN-PE1-RTR
+        - EVPN-PE0-RTR
         - EVPN-PE0-RTR
         - EVPN-PE1-RTR
         - EVPN-PE0-RTR
@@ -18,21 +18,21 @@
           - vrf_name: EPH_INTERNET
             description: INTERNET
             my_bgp_as: 65000
-            my_vrf_community: 201
+            my_vrf_community: 301
             v4_imports:
             - vrf_community: 1
               bgp_as: 65000
           - vrf_name: EPH_VOICE
             description: VOICE
             my_bgp_as: 65000
-            my_vrf_community: 202
+            my_vrf_community: 302
             v4_imports:
             - vrf_community: 2
               bgp_as: 65000
           - vrf_name: EPH_VIDEO
             description: VIDEO
             my_bgp_as: 65000
-            my_vrf_community: 203
+            my_vrf_community: 303
             v4_imports:
             - vrf_community: 3
               bgp_as: 65000
@@ -45,130 +45,49 @@
         interfaces:
           interface:
           - interface_type: BVI
-            interface_number: 201
+            interface_number: 301
             description: EPH_INTERNET
-            ipv4_address: 172.16.201.1
-            ipv4_mask: 172.16.201.1
+            ipv4_address: 172.17.201.1
+            ipv4_mask: 255.255.255.0
             vrf: EPH_INTERNET
-            mac_address: badb.a201.0010
+            mac_address: badb.a301.0010
           - interface_type: BVI
-            interface_number: 202
+            interface_number: 302
             description: EPH_VOICE
-            ipv4_address: 172.16.202.1
-            ipv4_mask: 172.16.202.1
+            ipv4_address: 172.17.202.1
+            ipv4_mask: 255.255.255.0
             vrf: EPH_VOICE
-            mac_address: badb.a202.0010
+            mac_address: badb.a302.0010
           - interface_type: BVI
-            interface_number: 203
+            interface_number: 303
             description: EPH_VIDEO
-            ipv4_address: 172.16.203.1
-            ipv4_mask: 172.16.203.1
+            ipv4_address: 172.17.203.1
+            ipv4_mask: 255.255.255.0
             vrf: EPH_VIDEO
-            mac_address: badb.a203.0010
+            mac_address: badb.a303.0010
         evpn:
           evi:
-          - evi_id: 201
-          - evi_id: 202
-          - evi_id: 203
+          - evi_id: 301
+          - evi_id: 302
+          - evi_id: 303
         l2vpn:
           group_name: EPH_OLTS
           bridge_domain:
           - bd_name: INTERNET
             interface:
             - interface_type: BVI
-              interface_number: 201
-            evi_id: 201
+              interface_number: 301
+            evi_id: 301
           - bd_name: VOICE
             interface:
             - interface_type: BVI
-              interface_number: 202
-            evi_id: 202
+              interface_number: 302
+            evi_id: 302
           - bd_name: VIDEO
             interface:
             - interface_type: BVI
-              interface_number: 203
-            evi_id: 203
-      - name: STB
-        device:
-        - EVPN-PE2-RTR
-        - EVPN-PE3-RTR
-        - EVPN-PE2-RTR
-        - EVPN-PE3-RTR
-        vrfs:
-          vrf:
-          - vrf_name: STB_INTERNET
-            description: INTERNET
-            my_bgp_as: 65000
-            my_vrf_community: 101
-            v4_imports:
-            - vrf_community: 1
-              bgp_as: 65000
-          - vrf_name: STB_VOICE
-            description: VOICE
-            my_bgp_as: 65000
-            my_vrf_community: 102
-            v4_imports:
-            - vrf_community: 2
-              bgp_as: 65000
-          - vrf_name: STB_VIDEO
-            description: VIDEO
-            my_bgp_as: 65000
-            my_vrf_community: 103
-            v4_imports:
-            - vrf_community: 3
-              bgp_as: 65000
-        bgp:
-          bgp_as: 65000
-          vrf:
-          - vrf_name: STB_INTERNET
-          - vrf_name: STB_VOICE
-          - vrf_name: STB_VIDEO
-        interfaces:
-          interface:
-          - interface_type: BVI
-            interface_number: 101
-            description: STB_INTERNET
-            ipv4_address: 172.16.101.1
-            ipv4_mask: 172.16.101.1
-            vrf: STB_INTERNET
-            mac_address: badb.a101.0011
-          - interface_type: BVI
-            interface_number: 102
-            description: STB_VOICE
-            ipv4_address: 172.16.102.1
-            ipv4_mask: 172.16.102.1
-            vrf: STB_VOICE
-            mac_address: badb.a102.0011
-          - interface_type: BVI
-            interface_number: 103
-            description: STB_VIDEO
-            ipv4_address: 172.16.103.1
-            ipv4_mask: 172.16.103.1
-            vrf: STB_VIDEO
-            mac_address: badb.a103.0011
-        evpn:
-          evi:
-          - evi_id: 101
-          - evi_id: 102
-          - evi_id: 103
-        l2vpn:
-          group_name: STB_OLTS
-          bridge_domain:
-          - bd_name: INTERNET
-            interface:
-            - interface_type: BVI
-              interface_number: 101
-            evi_id: 101
-          - bd_name: VOICE
-            interface:
-            - interface_type: BVI
-              interface_number: 102
-            evi_id: 102
-          - bd_name: VIDEO
-            interface:
-            - interface_type: BVI
-              interface_number: 103
-            evi_id: 103
+              interface_number: 303
+            evi_id: 303
 
     
       olt_deploy:olt_deploy:
@@ -178,72 +97,72 @@
           interfaces:
             interface:
             - interface_type: Bundle-Ether
-              interface_number: 10
+              interface_number: 30
               description: EPH_ROLT10
               lacp_mode: active
-              lacp_mac_address: badb.ad10.0010
+              lacp_mac_address: badb.ad30.0010
             - interface_type: Bundle-Ether
-              interface_number: 10.201
+              interface_number: 30.301
               description: INTERNET
-              outer_vlan: 201
+              outer_vlan: 301
             - interface_type: Bundle-Ether
-              interface_number: 10.202
+              interface_number: 30.302
               description: VOICE
-              outer_vlan: 202
+              outer_vlan: 302
             - interface_type: Bundle-Ether
-              interface_number: 10.203
+              interface_number: 30.303
               description: VIDEO
-              outer_vlan: 203
+              outer_vlan: 303
             - interface_type: TenGigE
               interface_number: 0/0/0/10
               description: EPH_ROLT10
-              bundle_id: 10
+              bundle_id: 30
               lacp_mode: active
-        - device: EVPN-PE1-RTR
+        - device: EVPN-PE0-RTR
           interfaces:
             interface:
             - interface_type: Bundle-Ether
-              interface_number: 10
+              interface_number: 30
               description: EPH_ROLT10
               lacp_mode: active
-              lacp_mac_address: badb.ad10.0010
+              lacp_mac_address: badb.ad30.0010
             - interface_type: Bundle-Ether
-              interface_number: 10.201
+              interface_number: 30.301
               description: INTERNET
-              outer_vlan: 201
+              outer_vlan: 301
             - interface_type: Bundle-Ether
-              interface_number: 10.202
+              interface_number: 30.302
               description: VOICE
-              outer_vlan: 202
+              outer_vlan: 302
             - interface_type: Bundle-Ether
-              interface_number: 10.203
+              interface_number: 30.303
               description: VIDEO
-              outer_vlan: 203
+              outer_vlan: 303
             - interface_type: TenGigE
               interface_number: 0/0/0/10
               description: EPH_ROLT10
-              bundle_id: 10
+              bundle_id: 30
               lacp_mode: active
           evpn:
             interface:
             - interface_type: Bundle-Ether
-              interface_number: 10
-              esi_identifier: 10.6e.65.62.72.65.64.6c.65.10
+              interface_number: 30
+              esi_identifier: 10.6e.65.62.72.65.64.6c.65.30
           l2vpn:
             group_name: EPH_OLTS
             bridge_domain:
             - bd_name: INTERNET
               interface:
               - interface_type: Bundle-Ether
-                interface_number: 10.201
+                interface_number: 30.301
             - bd_name: VOICE
               interface:
               - interface_type: Bundle-Ether
-                interface_number: 10.202
+                interface_number: 30.302
             - bd_name: VIDEO
               interface:
               - interface_type: Bundle-Ether
-                interface_number: 10.203
+                interface_number: 30.303
       - name: EPH
         pe:
         - device: EVPN-PE0-RTR
@@ -255,17 +174,17 @@
               lacp_mode: active
               lacp_mac_address: badb.ad11.0010
             - interface_type: Bundle-Ether
-              interface_number: 11.201
+              interface_number: 11.301
               description: INTERNET
-              outer_vlan: 201
+              outer_vlan: 301
             - interface_type: Bundle-Ether
-              interface_number: 11.202
+              interface_number: 11.302
               description: VOICE
-              outer_vlan: 202
+              outer_vlan: 302
             - interface_type: Bundle-Ether
-              interface_number: 11.203
+              interface_number: 11.303
               description: VIDEO
-              outer_vlan: 203
+              outer_vlan: 303
             - interface_type: TenGigE
               interface_number: 0/0/0/11
               description: EPH_ROLT11
@@ -280,17 +199,17 @@
               lacp_mode: active
               lacp_mac_address: badb.ad11.0010
             - interface_type: Bundle-Ether
-              interface_number: 11.201
+              interface_number: 11.301
               description: INTERNET
-              outer_vlan: 201
+              outer_vlan: 301
             - interface_type: Bundle-Ether
-              interface_number: 11.202
+              interface_number: 11.302
               description: VOICE
-              outer_vlan: 202
+              outer_vlan: 302
             - interface_type: Bundle-Ether
-              interface_number: 11.203
+              interface_number: 11.303
               description: VIDEO
-              outer_vlan: 203
+              outer_vlan: 303
             - interface_type: TenGigE
               interface_number: 0/0/0/11
               description: EPH_ROLT11
@@ -307,15 +226,15 @@
             - bd_name: INTERNET
               interface:
               - interface_type: Bundle-Ether
-                interface_number: 11.201
+                interface_number: 11.301
             - bd_name: VOICE
               interface:
               - interface_type: Bundle-Ether
-                interface_number: 11.202
+                interface_number: 11.302
             - bd_name: VIDEO
               interface:
               - interface_type: Bundle-Ether
-                interface_number: 11.203
+                interface_number: 11.303
       - name: EPH
         pe:
         - device: EVPN-PE0-RTR
@@ -327,17 +246,17 @@
               lacp_mode: active
               lacp_mac_address: badb.ad12.0010
             - interface_type: Bundle-Ether
-              interface_number: 12.201
+              interface_number: 12.301
               description: INTERNET
-              outer_vlan: 201
+              outer_vlan: 301
             - interface_type: Bundle-Ether
-              interface_number: 12.202
+              interface_number: 12.302
               description: VOICE
-              outer_vlan: 202
+              outer_vlan: 302
             - interface_type: Bundle-Ether
-              interface_number: 12.203
+              interface_number: 12.303
               description: VIDEO
-              outer_vlan: 203
+              outer_vlan: 303
             - interface_type: TenGigE
               interface_number: 0/0/0/12
               description: EPH_ROLT12
@@ -352,17 +271,17 @@
               lacp_mode: active
               lacp_mac_address: badb.ad12.0010
             - interface_type: Bundle-Ether
-              interface_number: 12.201
+              interface_number: 12.301
               description: INTERNET
-              outer_vlan: 201
+              outer_vlan: 301
             - interface_type: Bundle-Ether
-              interface_number: 12.202
+              interface_number: 12.302
               description: VOICE
-              outer_vlan: 202
+              outer_vlan: 302
             - interface_type: Bundle-Ether
-              interface_number: 12.203
+              interface_number: 12.303
               description: VIDEO
-              outer_vlan: 203
+              outer_vlan: 303
             - interface_type: TenGigE
               interface_number: 0/0/0/12
               description: EPH_ROLT12
@@ -379,157 +298,12 @@
             - bd_name: INTERNET
               interface:
               - interface_type: Bundle-Ether
-                interface_number: 12.201
+                interface_number: 12.301
             - bd_name: VOICE
               interface:
               - interface_type: Bundle-Ether
-                interface_number: 12.202
+                interface_number: 12.302
             - bd_name: VIDEO
               interface:
               - interface_type: Bundle-Ether
-                interface_number: 12.203
-      olt_deploy:olt_deploy:
-      - name: STB
-        pe:
-        - device: EVPN-PE2-RTR
-          interfaces:
-            interface:
-            - interface_type: Bundle-Ether
-              interface_number: 10
-              description: STB_ROLT10
-              lacp_mode: active
-              lacp_mac_address: badb.ad10.0011
-            - interface_type: Bundle-Ether
-              interface_number: 10.101
-              description: INTERNET
-              outer_vlan: 101
-            - interface_type: Bundle-Ether
-              interface_number: 10.102
-              description: VOICE
-              outer_vlan: 102
-            - interface_type: Bundle-Ether
-              interface_number: 10.103
-              description: VIDEO
-              outer_vlan: 103
-            - interface_type: TenGigE
-              interface_number: 0/0/0/10
-              description: STB_ROLT10
-              bundle_id: 10
-              lacp_mode: active
-        - device: EVPN-PE3-RTR
-          interfaces:
-            interface:
-            - interface_type: Bundle-Ether
-              interface_number: 10
-              description: STB_ROLT10
-              lacp_mode: active
-              lacp_mac_address: badb.ad10.0011
-            - interface_type: Bundle-Ether
-              interface_number: 10.101
-              description: INTERNET
-              outer_vlan: 101
-            - interface_type: Bundle-Ether
-              interface_number: 10.102
-              description: VOICE
-              outer_vlan: 102
-            - interface_type: Bundle-Ether
-              interface_number: 10.103
-              description: VIDEO
-              outer_vlan: 103
-            - interface_type: TenGigE
-              interface_number: 0/0/0/10
-              description: STB_ROLT10
-              bundle_id: 10
-              lacp_mode: active
-          evpn:
-            interface:
-            - interface_type: Bundle-Ether
-              interface_number: 10
-              esi_identifier: 11.6e.65.62.72.65.64.6c.65.10
-          l2vpn:
-            group_name: STB_OLTS
-            bridge_domain:
-            - bd_name: INTERNET
-              interface:
-              - interface_type: Bundle-Ether
-                interface_number: 10.101
-            - bd_name: VOICE
-              interface:
-              - interface_type: Bundle-Ether
-                interface_number: 10.102
-            - bd_name: VIDEO
-              interface:
-              - interface_type: Bundle-Ether
-                interface_number: 10.103
-      - name: STB
-        pe:
-        - device: EVPN-PE2-RTR
-          interfaces:
-            interface:
-            - interface_type: Bundle-Ether
-              interface_number: 11
-              description: STB_ROLT11
-              lacp_mode: active
-              lacp_mac_address: badb.ad11.0011
-            - interface_type: Bundle-Ether
-              interface_number: 11.101
-              description: INTERNET
-              outer_vlan: 101
-            - interface_type: Bundle-Ether
-              interface_number: 11.102
-              description: VOICE
-              outer_vlan: 102
-            - interface_type: Bundle-Ether
-              interface_number: 11.103
-              description: VIDEO
-              outer_vlan: 103
-            - interface_type: TenGigE
-              interface_number: 0/0/0/11
-              description: STB_ROLT11
-              bundle_id: 11
-              lacp_mode: active
-        - device: EVPN-PE3-RTR
-          interfaces:
-            interface:
-            - interface_type: Bundle-Ether
-              interface_number: 11
-              description: STB_ROLT11
-              lacp_mode: active
-              lacp_mac_address: badb.ad11.0011
-            - interface_type: Bundle-Ether
-              interface_number: 11.101
-              description: INTERNET
-              outer_vlan: 101
-            - interface_type: Bundle-Ether
-              interface_number: 11.102
-              description: VOICE
-              outer_vlan: 102
-            - interface_type: Bundle-Ether
-              interface_number: 11.103
-              description: VIDEO
-              outer_vlan: 103
-            - interface_type: TenGigE
-              interface_number: 0/0/0/11
-              description: STB_ROLT11
-              bundle_id: 11
-              lacp_mode: active
-          evpn:
-            interface:
-            - interface_type: Bundle-Ether
-              interface_number: 11
-              esi_identifier: 11.6e.65.62.72.65.64.6c.65.11
-          l2vpn:
-            group_name: STB_OLTS
-            bridge_domain:
-            - bd_name: INTERNET
-              interface:
-              - interface_type: Bundle-Ether
-                interface_number: 11.101
-            - bd_name: VOICE
-              interface:
-              - interface_type: Bundle-Ether
-                interface_number: 11.102
-            - bd_name: VIDEO
-              interface:
-              - interface_type: Bundle-Ether
-                interface_number: 11.103
+                interface_number: 12.303

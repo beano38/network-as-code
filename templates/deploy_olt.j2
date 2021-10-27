@@ -43,7 +43,7 @@
             interface_number: {{ vrf.community }}
             description: {{ site.plug }}_{{ vrf.name }}
             ipv4_address: {{ vrf.ipv4_address }}
-            ipv4_mask: {{ vrf.ipv4_address }}
+            ipv4_mask: {{ vrf.ipv4_mask }}
             vrf: {{ site.plug }}_{{ vrf.name }}
             mac_address: badb.a{{ vrf.community }}.00{{ site.id }}
 {% endfor %}
